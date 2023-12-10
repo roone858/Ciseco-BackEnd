@@ -10,9 +10,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true, // no need to import into other modules
     }),
-    MongooseModule.forRoot(
-      'mongodb+srv://roone858:sZmuXGweLVLvzNQB@cluster0.hndglzz.mongodb.net/ciseco?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRoot(process.env.DATABASE_URL),
     UsersModule,
     AuthModule,
   ],
