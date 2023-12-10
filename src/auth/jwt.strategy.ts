@@ -1,7 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { jwtConstants } from './constants';
 import { User } from '../users/schemas/users.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -12,15 +11,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: jwtConstants.secret,
+      secretOrKey: process.env.JWT_SECRET,
     });
   }
 
   async validate(payload: any) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...user } = await this.userModel.findOne({
-      username: payload.username,
-    });
-    return user;
+    console.log(payload);
+    const result = await this.userModel
+      .findOne({
+        username: payload.username,
+      })
+      .select('-password  -phone')
+      .lean();
+    return result;
   }
 }

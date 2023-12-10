@@ -8,9 +8,12 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from './auth.guard';
+// import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { Roles } from 'src/users/roles.decorator';
+import { RolesGuard } from 'src/users/roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -33,8 +36,8 @@ export class AuthController {
       return { success: false, message: error.message };
     }
   }
-
-  @UseGuards(AuthGuard)
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
