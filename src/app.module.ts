@@ -7,18 +7,20 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductsModule } from './products/products.module';
 import { ReviewModule } from './review/review.module';
+import { CartController } from './cart/cart.controller';
+import { CartService } from './cart/cart.service';
 @Module({
   imports: [
+    UsersModule,
     ConfigModule.forRoot({
       isGlobal: true, // no need to import into other modules
     }),
     MongooseModule.forRoot(process.env.DATABASE_URL),
-    UsersModule,
     AuthModule,
     ProductsModule,
     ReviewModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, CartController],
+  providers: [AppService, CartService],
 })
 export class AppModule {}

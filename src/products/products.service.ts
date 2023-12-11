@@ -19,9 +19,7 @@ export class ProductsService {
   async exists(productId: string): Promise<boolean> {
     try {
       const product = await this.productModel.findById(productId).exec();
-      if (!product) {
-        throw new NotFoundException(`Product with ID ${productId} not found`);
-      }
+
       return !!product; // Returns true if product exists, false otherwise
     } catch (err) {
       throw new NotFoundException(`Product with ID ${productId} not found`);

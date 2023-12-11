@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 @Schema()
@@ -40,9 +40,17 @@ export class User {
   @Prop({ type: Address, required: true })
   address: Address;
 
-  @Prop()
+  @Prop({
+    type: [
+      {
+        product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+        quantity: { type: Number, required: true },
+      },
+    ],
+    default: [],
+  })
   cart: {
-    product_id: string; // Assuming product_id is a string in MongoDB
+    product: mongoose.Schema.Types.ObjectId;
     quantity: number;
   }[];
 
