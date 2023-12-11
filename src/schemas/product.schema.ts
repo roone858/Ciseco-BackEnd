@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
-
+import { Document } from 'mongoose';
+export type ProductDocument = Product & Document;
 @Schema()
 export class Product extends Document {
   @Prop({ required: true })
@@ -47,14 +47,6 @@ export class Product extends Document {
 
   @Prop({ default: false })
   trend: boolean;
-
-  @Prop([
-    {
-      user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
-      rating: { type: Number, required: true },
-    },
-  ])
-  ratings: { user_id: mongoose.Types.ObjectId; rating: number }[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
