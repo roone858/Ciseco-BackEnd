@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { User, UserDocument } from './schemas/users.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
   constructor(
@@ -26,12 +27,35 @@ export class UsersService {
     return user;
   }
 
-  async create(newUser: CreateUserDto) {
-    // const passwordHash = await CryptoService.hash(createUserDto.password);
+  async hashPassword(password: string): Promise<string> {
+    const saltRounds = +process.env.SALT_ROUNDS;
+    const hashedPassword = await bcrypt.hash(
+      password + process.env.HASH_PASSWORD_KEY,
+      saltRounds,
+    );
+    return hashedPassword;
+  }
+
+  async comparePasswords(
+    enteredPassword: string,
+    storedPassword: string,
+  ): Promise<boolean> {
+    const passwordMatch = await bcrypt.compare(
+      enteredPassword + process.env.HASH_PASSWORD_KEY,
+      storedPassword,
+    );
+    return passwordMatch;
+  }
+
+  async create(createUserDto: CreateUserDto) {
     const user = new this.userModel({
-      ...newUser,
+      ...createUserDto,
+      password: await this.hashPassword(createUserDto.password),
     });
-    const returnUser = await user.save();
-    return returnUser;
+    const result = await user.save();
+
+    const { password, ...userWithoutPassword } = result.toObject();
+
+    return userWithoutPassword;
   }
 }

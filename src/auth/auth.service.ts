@@ -13,19 +13,19 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
-  async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.userModel.findOne({ username });
-    const isPasswordCorrect = user && (await user.isPasswordCorrect(password));
-    if (isPasswordCorrect) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = JSON.parse(JSON.stringify(user));
-      return result;
-    }
-    return null;
-  }
+  // async validateUser(username: string, password: string): Promise<any> {
+  //   const user = await this.userModel.findOne({ username });
+  //   const isPasswordCorrect = user && (await user.isPasswordCorrect(password));
+  //   if (isPasswordCorrect) {
+  //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //     const { password, ...result } = user;
+  //     return result;
+  //   }
+  //   return null;
+  // }
   async signIn(username: string, pass: string) {
     const user = await this.usersService.findOne(username);
-    if (user?.password !== pass) {
+    if (!(await this.usersService.comparePasswords(pass, user.password))) {
       throw new UnauthorizedException();
     }
     const payload = { username: user.username };

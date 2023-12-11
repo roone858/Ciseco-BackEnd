@@ -19,13 +19,12 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   ): Promise<{ access_token: string } | null> {
     // Here, you should implement your own logic to validate the user's credentials
     // For example, check the database for a user with the provided username and password
-    console.log(username);
-    const user = await this.authService.signIn(username, password);
+    const access_token = await this.authService.signIn(username, password);
 
-    if (!user) {
+    if (!access_token) {
       throw new UnauthorizedException();
     }
 
-    return user;
+    return access_token;
   }
 }
