@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ReviewController } from './review.controller';
-import { Review, ReviewSchema } from 'src/schemas/review.schema';
+import { Review, ReviewSchema } from 'src/review/schemas/review.schema';
 import { ReviewService } from './review.service';
 import { ProductsService } from 'src/products/products.service';
-import { Product, ProductSchema } from 'src/schemas/product.schema';
+import { Product, ProductSchema } from 'src/products/schemas/product.schema';
 
 @Module({
   imports: [

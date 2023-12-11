@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { Product } from '../schemas/product.schema';
+import { Product } from './schemas/product.schema';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('products')
@@ -23,11 +23,9 @@ export class ProductsController {
   @Get(':id')
   async getProduct(@Param('id') id: string): Promise<Product> {
     const product = await this.productsService.findById(id);
-
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
-
     return product;
   }
   @UseGuards(AuthGuard)
