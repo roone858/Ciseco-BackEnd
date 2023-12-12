@@ -18,12 +18,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: any) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-    const result = await this.userModel
+    const user = await this.userModel
       .findOne({
         username: payload.username,
       })
       .select('-password  -phone')
       .lean();
-    return result;
+    return user;
   }
 }

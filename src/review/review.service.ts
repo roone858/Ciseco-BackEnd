@@ -14,11 +14,18 @@ export class ReviewService {
   ) {}
 
   async findAll(): Promise<Review[]> {
-    return this.reviewModel.find().exec();
+    return this.reviewModel.find();
   }
 
   async findByProduct(productId: string): Promise<Review[]> {
-    return this.reviewModel.find({ product_id: productId }).exec();
+    return this.reviewModel
+      .find({ product: productId })
+      .populate({
+        path: 'user',
+        select: 'name image username', // Exclude phone, email, and password
+      })
+      .lean()
+      .exec();
   }
 
   async findByProductAndUser(
@@ -30,26 +37,26 @@ export class ReviewService {
 
     // Find reviews based on both product_id and user_id
     return this.reviewModel
-      .findOne({ product_id: productId, user_id: userId })
+      .findOne({ product: productId, user: userId })
       .exec();
   }
 
   async create(createReviewDto: CreateReviewDto): Promise<Review> {
     const reviewExists = await this.findByProductAndUser(
-      createReviewDto.product_id,
-      createReviewDto.user_id,
+      createReviewDto.product,
+      createReviewDto.user,
     );
     if (reviewExists)
       throw new ConflictException(
-        `Review for product ${createReviewDto.product_id} by user ${createReviewDto.user_id} already exists`,
+        `Review for product ${createReviewDto.product} by user ${createReviewDto.user} already exists`,
       );
 
     const productExists = await this.productService.exists(
-      createReviewDto.product_id,
+      createReviewDto.product,
     );
     if (!productExists)
       throw new ConflictException(
-        ` product ${createReviewDto.product_id}  not found`,
+        ` product ${createReviewDto.product}  not found`,
       );
 
     const createdReview = new this.reviewModel(createReviewDto);

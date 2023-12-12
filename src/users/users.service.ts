@@ -12,12 +12,12 @@ export class UsersService {
   ) {}
 
   async findAll() {
-    const user = await this.userModel.find();
-    if (!user) {
+    const users = await this.userModel.find();
+    if (!users) {
       throw new NotFoundException();
     }
 
-    return user;
+    return users;
   }
   async findOne(username: string) {
     const user = await this.userModel.findOne({ username: username });

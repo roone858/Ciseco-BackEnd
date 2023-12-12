@@ -35,7 +35,10 @@ export class AuthService {
   }
 
   async signup(payload: CreateUserDto) {
-    const newUser = await this.usersService.create(payload);
+    const newUser = await this.usersService.create({
+      ...payload,
+      role: 'user',
+    });
 
     return {
       user: newUser,

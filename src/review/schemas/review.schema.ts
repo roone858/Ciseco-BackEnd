@@ -10,10 +10,10 @@ export type ReviewDocument = Review & Document;
 @Schema()
 export class Review {
   @Prop({ type: String, ref: 'User', required: true })
-  user_id: UserDocument;
+  user: UserDocument;
 
   @Prop({ type: String, ref: 'Product', required: true })
-  product_id: ProductDocument;
+  product: ProductDocument;
 
   @Prop({ required: true })
   text: string;

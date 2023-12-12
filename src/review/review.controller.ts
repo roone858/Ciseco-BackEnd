@@ -1,14 +1,18 @@
 // review.controller.ts
 
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { ReviewService } from './review.service';
+import { AdminGuard } from 'src/users/admin.guard';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('reviews')
+@UseGuards(JwtAuthGuard)
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
   @Get()
+  @UseGuards(AdminGuard)
   async findAll() {
     return this.reviewService.findAll();
   }

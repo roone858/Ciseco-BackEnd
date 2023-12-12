@@ -1,15 +1,19 @@
-import { Controller } from '@nestjs/common';
+import { Body, Post, Controller, UseGuards, Get } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AdminGuard } from './admin.guard';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @UseGuards()
-  // @Get()
-  // findAll() {
-  //   return this.usersService.findAll();
-  // }
+  @Get()
+  @UseGuards(AdminGuard)
+  findAll() {
+    return this.usersService.findAll();
+  }
 
   // @UseGuards(auth)
   // @Get(':username')
@@ -17,10 +21,11 @@ export class UsersController {
   //   return this.usersService.findOne(username);
   // }
 
-  // @Post()
-  // create(@Body() createUserDto: CreateUserDto) {
-  //   return this.usersService.create(createUserDto);
-  // }
+  @Post()
+  @UseGuards(AdminGuard)
+  createAdmin(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
 
   // @UseGuards()
   // @Patch(':id')
