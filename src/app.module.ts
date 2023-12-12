@@ -9,6 +9,7 @@ import { ProductsModule } from './products/products.module';
 import { ReviewModule } from './review/review.module';
 import { CartController } from './cart/cart.controller';
 import { CartService } from './cart/cart.service';
+import { OrderModule } from './orders/order.module';
 @Module({
   imports: [
     UsersModule,
@@ -18,6 +19,7 @@ import { CartService } from './cart/cart.service';
     MongooseModule.forRoot(process.env.DATABASE_URL),
     AuthModule,
     ProductsModule,
+    OrderModule,
     ReviewModule,
   ],
   controllers: [AppController, CartController],
