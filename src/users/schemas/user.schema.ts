@@ -22,7 +22,7 @@ export class User {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   username: string;
 
   @Prop({ required: true })
@@ -37,8 +37,8 @@ export class User {
   @Prop({ required: false })
   image: string;
 
-  @Prop({ type: Address, required: true })
-  address: Address;
+  @Prop({ type: [Address], required: true, default: [] })
+  address: Address[];
 
   @Prop({
     type: [

@@ -7,6 +7,7 @@ import {
   Post,
   Request,
   UseGuards,
+  UseFilters,
 } from '@nestjs/common';
 // import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -15,8 +16,10 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { Roles } from 'src/users/roles.decorator';
 import { RolesGuard } from 'src/users/roles.guard';
 import { LocalAuthGuard } from './local-auth.guard';
+import { MongoExceptionFilter } from 'src/exceptions/mongo-exception.filter';
 
 @Controller('auth')
+@UseFilters(MongoExceptionFilter)
 export class AuthController {
   constructor(private authService: AuthService) {}
 
@@ -27,16 +30,11 @@ export class AuthController {
     return req.user;
   }
 
-  @HttpCode(HttpStatus.OK)
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
-    try {
-      // Call your AuthService to handle user creation and authentication
-      const result = await this.authService.signup(createUserDto);
-      return { success: true, user: result };
-    } catch (error) {
-      return { success: false, message: error.message };
-    }
+    // Call your AuthService to handle user creation and authentication
+    const result = await this.authService.signup(createUserDto);
+    return { success: true, user: result };
   }
   @Roles('admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
