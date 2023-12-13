@@ -36,5 +36,4 @@ export class Order {
   @Prop({ required: true, type: [OrderItemSchema] })
   order_items: OrderItem[];
 }
-
 export const OrderSchema = SchemaFactory.createForClass(Order);

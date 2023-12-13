@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Order, OrderDocument } from './schemas/order.schema';
@@ -11,12 +11,6 @@ export class OrderService {
   ) {}
 
   async createOrder(createOrderDto: CreateOrderDto): Promise<Order> {
-    const existingUser = await this.orderModel.findOne({
-      user: createOrderDto.user,
-    });
-    if (existingUser)
-      throw new HttpException('User can create only one order', 403);
-
     const createdOrder = new this.orderModel(createOrderDto);
     return createdOrder.save();
   }
