@@ -2,42 +2,43 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/user.schema';
-import { CreateCartItemDto } from './dto/create-cart-item.dto';
+import { Cart, CartDocument, CartItem } from './schemas/cart.schema';
 
 @Injectable()
 export class CartService {
   constructor(
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(Cart.name) private readonly cartModel: Model<CartDocument>,
   ) {}
 
   async getUserCart(user: User) {
-    const userWithCart = await this.userModel
-      .findOne({ username: user.username })
-      .select('cart')
-      .populate({
-        path: 'cart.product',
-        select: 'title image ',
-      });
-    return userWithCart.cart;
+    console.log(user);
+    const cart = await this.cartModel.findOne({ user: user });
+    if (!cart) {
+      const cart = new this.cartModel({ user: user });
+      return await cart.save();
+    }
+    return cart;
   }
 
   async addToCart(
-    reqUser: UserDocument,
-    cartItem: CreateCartItemDto,
-  ): Promise<UserDocument> {
-    const user = await this.userModel.findOne({ username: reqUser.username });
-    user.cart.push({ ...cartItem });
+    user: UserDocument,
+    cartItem: CartItem,
+  ): Promise<CartDocument> {
+    const cart = await this.cartModel.findOne({ user: user });
+    cart.items.push({ ...cartItem });
     console.log(user);
-    return await user.save();
+    return await cart.save();
   }
 
   async removeFromCart(
-    reqUser: UserDocument,
+    user: UserDocument,
     itemId: string,
-  ): Promise<UserDocument> {
-    const user = await this.userModel.findOne({ username: reqUser.username });
-    user.cart = user.cart.filter((item) => item.product.toString() !== itemId);
+  ): Promise<CartDocument> {
+    const cart = await this.cartModel.findOne({ user: user });
+    cart.items = cart.items.filter(
+      (item) => item.product.toString() !== itemId,
+    );
 
-    return await user.save();
+    return await cart.save();
   }
 }

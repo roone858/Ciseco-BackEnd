@@ -1,6 +1,6 @@
-import { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 
 export class CreateCartItemDto {
-  readonly product: ObjectId;
+  readonly product: mongoose.Schema.Types.ObjectId;
   readonly quantity: number;
 }

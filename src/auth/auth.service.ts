@@ -28,21 +28,31 @@ export class AuthService {
     if (!(await this.usersService.comparePasswords(pass, user.password))) {
       throw new UnauthorizedException();
     }
-    const payload = { username: user.username };
+    const payload = { _id: user._id };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
   }
 
-  async signup(payload: CreateUserDto) {
+  async signup(createUserDto: CreateUserDto) {
     const newUser = await this.usersService.create({
-      ...payload,
+      ...createUserDto,
       role: 'user',
     });
 
     return {
       user: newUser,
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync({ _id: newUser._id }),
     };
+  }
+
+  async isUsernameTaken(username: string): Promise<boolean> {
+    const existingUser = await this.userModel.findOne({ username });
+    return !!existingUser;
+  }
+
+  async isEmailExists(email: string): Promise<boolean> {
+    const existingUser = await this.userModel.findOne({ email });
+    return !!existingUser;
   }
 }

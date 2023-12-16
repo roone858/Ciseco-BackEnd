@@ -7,9 +7,10 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductsModule } from './products/products.module';
 import { ReviewModule } from './review/review.module';
-import { CartController } from './cart/cart.controller';
-import { CartService } from './cart/cart.service';
+
 import { OrderModule } from './orders/order.module';
+import { CartModule } from './cart/cart.module';
+import { ShippingModule } from './shipping/shipping.module';
 @Module({
   imports: [
     UsersModule,
@@ -18,11 +19,13 @@ import { OrderModule } from './orders/order.module';
     }),
     MongooseModule.forRoot(process.env.DATABASE_URL),
     AuthModule,
+    CartModule,
     ProductsModule,
     OrderModule,
     ReviewModule,
+    ShippingModule,
   ],
-  controllers: [AppController, CartController],
-  providers: [AppService, CartService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

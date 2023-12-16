@@ -17,12 +17,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
     const user = await this.userModel
-      .findOne({
-        username: payload.username,
-      })
-      .select('-password  -phone')
+      .findById(payload._id)
+      .select('-password ')
       .lean();
     return user;
   }

@@ -9,7 +9,6 @@ import {
   UseGuards,
   UseFilters,
 } from '@nestjs/common';
-// import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -36,8 +35,22 @@ export class AuthController {
     const result = await this.authService.signup(createUserDto);
     return { success: true, user: result };
   }
-  @Roles('admin')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Post('check-username')
+  async checkUsername(
+    @Body() body: { username: string },
+  ): Promise<{ isTaken: boolean }> {
+    const isTaken = await this.authService.isUsernameTaken(body.username);
+    return { isTaken };
+  }
+
+  @Post('check-email')
+  async checkEmail(
+    @Body() body: { email: string },
+  ): Promise<{ isExists: boolean }> {
+    const isExists = await this.authService.isEmailExists(body.email);
+    return { isExists };
+  }
+  @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;

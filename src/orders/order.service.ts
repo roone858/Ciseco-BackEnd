@@ -3,16 +3,20 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Order, OrderDocument } from './schemas/order.schema';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { CartService } from 'src/cart/cart.service';
 
 @Injectable()
 export class OrderService {
   constructor(
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
+    private readonly cartService: CartService,
   ) {}
 
   async createOrder(createOrderDto: CreateOrderDto): Promise<Order> {
-    const createdOrder = new this.orderModel(createOrderDto);
-    return createdOrder.save();
+    const cart = await this.cartService.getUserCart(createOrderDto.user);
+    const order = new this.orderModel(createOrderDto);
+    order.order_items = cart.items;
+    return await order.save();
   }
 
   async getOrders(): Promise<Order[]> {

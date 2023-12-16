@@ -1,12 +1,14 @@
-// // cart.module.ts (example module where CartService is used)
-// import { Module } from '@nestjs/common';
-// import { CartController } from './cart.controller';
-// import { CartService } from './cart.service';
-// import { UsersModule } from 'src/users/users.module';
+import { Module } from '@nestjs/common';
+import { CartController } from './cart.controller';
+import { CartService } from './cart.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Cart, CartSchema } from './schemas/cart.schema';
 
-// @Module({
-//   imports: [UsersModule],
-//   controllers: [CartController],
-//   providers: [CartService],
-// })
-// export class CartModule {}
+@Module({
+  imports: [
+    MongooseModule.forFeature([{ name: Cart.name, schema: CartSchema }]),
+  ],
+  controllers: [CartController],
+  providers: [CartService],
+})
+export class CartModule {}

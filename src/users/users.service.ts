@@ -11,6 +11,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UsersService {
   constructor(
@@ -53,6 +54,34 @@ export class UsersService {
     return passwordMatch;
   }
 
+  async changePassword(
+    id: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<User | null> {
+    const user = await this.userModel.findById(id).exec();
+    if (!user) {
+      return null; // User not found
+    }
+    // Compare the entered current password with the stored hashed password
+    const isPasswordValid = await this.comparePasswords(
+      currentPassword,
+      user.password,
+    );
+    if (!isPasswordValid) {
+      return null; // Current password is not valid
+    }
+    // Hash the new password before updating it in the database
+    const hashedNewPassword = await this.hashPassword(newPassword);
+    return this.userModel
+      .findOneAndUpdate(
+        { _id: id },
+        { $set: { password: hashedNewPassword } },
+        { new: true },
+      )
+      .exec();
+  }
+
   async create(createUserDto: CreateUserDto) {
     const user = new this.userModel({
       ...createUserDto,
@@ -63,5 +92,14 @@ export class UsersService {
     const { password, ...userWithoutPassword } = result.toObject();
 
     return userWithoutPassword;
+  }
+  async updateUser(
+    userId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    const { password, ...updateData } = updateUserDto;
+    return this.userModel.findByIdAndUpdate(userId, updateData, {
+      new: true,
+    });
   }
 }
