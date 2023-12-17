@@ -7,19 +7,27 @@ import {
   Patch,
   Request,
   Req,
+  UseInterceptors,
+  UploadedFile,
+  Param,
+  Res,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AdminGuard } from './admin.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
-
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { join } from 'path';
+import { Response } from 'express';
+import * as path from 'path';
 @Controller('users')
-@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @UseGuards(AdminGuard)
   findAll() {
     return this.usersService.findAll();
@@ -32,6 +40,7 @@ export class UsersController {
   // }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @UseGuards(AdminGuard)
   createAdmin(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
@@ -64,9 +73,36 @@ export class UsersController {
       };
     }
   }
-  // @UseGuards()
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   // return this.usersService.remove(+id);
-  // }
+
+  @Post('profile-picture')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads', // Specify the directory where files will be stored
+        filename: (req, file, cb) => {
+          const userId = (req as any).user._id; // Assuming you have a user object in the request
+          const fileExtension = path.extname(file.originalname);
+          const fileName = userId + fileExtension;
+          cb(null, fileName);
+        },
+      }),
+    }),
+  )
+  async uploadProfilePicture(@UploadedFile() file, @Req() req) {
+    const { _id } = req.user;
+    const userProfile = await this.usersService.updateProfileImage(
+      _id,
+      file.filename,
+    );
+    return userProfile;
+  }
+
+  @Get('/profile-picture/:image')
+  getProfilePicture(@Param('image') image: string, @Res() res: Response) {
+    // Construct the path to the user's profile picture
+    const imagePath = join(__dirname, '..', '..', 'uploads', image);
+    // Send the file as a response
+    res.sendFile(imagePath);
+  }
 }

@@ -102,4 +102,13 @@ export class UsersService {
       new: true,
     });
   }
+  async updateProfileImage(userId: string, filename: string): Promise<any> {
+    return this.userModel
+      .findOneAndUpdate(
+        { _id: userId },
+        { $set: { image: filename } },
+        { new: true },
+      )
+      .exec();
+  }
 }

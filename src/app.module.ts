@@ -11,6 +11,7 @@ import { ReviewModule } from './review/review.module';
 import { OrderModule } from './orders/order.module';
 import { CartModule } from './cart/cart.module';
 import { ShippingModule } from './shipping/shipping.module';
+// import { MulterConfigModule } from './multer/multer.module';
 @Module({
   imports: [
     UsersModule,
@@ -24,6 +25,7 @@ import { ShippingModule } from './shipping/shipping.module';
     OrderModule,
     ReviewModule,
     ShippingModule,
+    // MulterConfigModule,
   ],
   controllers: [AppController],
   providers: [AppService],
