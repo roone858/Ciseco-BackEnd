@@ -8,18 +8,16 @@ import { AuthService } from './auth.service';
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   constructor(private authService: AuthService) {
     super({
-      usernameField: 'username', // Adjust this based on your user model
+      usernameField: 'identifier', // Adjust this based on your user model // Adjust this based on your user model
       passwordField: 'password',
     });
   }
 
   async validate(
-    username: string,
+    identifier: string,
     password: string,
   ): Promise<{ access_token: string } | null> {
-    // Here, you should implement your own logic to validate the user's credentials
-    // For example, check the database for a user with the provided username and password
-    const access_token = await this.authService.signIn(username, password);
+    const access_token = await this.authService.signIn(identifier, password);
 
     if (!access_token) {
       throw new UnauthorizedException();

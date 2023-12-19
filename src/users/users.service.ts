@@ -34,6 +34,24 @@ export class UsersService {
     return user;
   }
 
+  async findOneByEmail(email: string) {
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user;
+  }
+  async findByEmailOrUsername(
+    identifier: string,
+  ): Promise<UserDocument | null> {
+    const user = await this.userModel
+      .findOne({ $or: [{ email: identifier }, { username: identifier }] })
+      .exec();
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user;
+  }
   async hashPassword(password: string): Promise<string> {
     const saltRounds = +process.env.SALT_ROUNDS;
     const hashedPassword = await bcrypt.hash(

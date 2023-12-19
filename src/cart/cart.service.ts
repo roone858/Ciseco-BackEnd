@@ -36,7 +36,7 @@ export class CartService {
   ): Promise<CartDocument> {
     const cart = await this.cartModel.findOne({ user: user });
     cart.items = cart.items.filter(
-      (item) => item.product.toString() !== itemId,
+      (item) => item.productId.toString() !== itemId,
     );
 
     return await cart.save();

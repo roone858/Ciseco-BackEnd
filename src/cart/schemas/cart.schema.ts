@@ -10,7 +10,7 @@ export class CartItem {
     ref: 'Product',
     required: true,
   })
-  product: string;
+  productId: string;
 
   @Prop({ required: true })
   quantity: number;

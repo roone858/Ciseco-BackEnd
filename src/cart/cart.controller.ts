@@ -12,6 +12,7 @@ import { CartService } from './cart.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'; // Use your authentication guard
 import { UserDocument } from 'src/users/schemas/user.schema';
 import { User } from 'src/users/user.decorator';
+import { CartItem } from './schemas/cart.schema';
 
 @Controller('cart')
 @UseGuards(JwtAuthGuard) // Secure the cart endpoints with authentication
@@ -24,7 +25,7 @@ export class CartController {
   }
 
   @Post('add')
-  addToCart(@User() user: UserDocument, @Body() item: any) {
+  addToCart(@User() user: UserDocument, @Body() item: CartItem) {
     return this.cartService.addToCart(user, item);
   }
 

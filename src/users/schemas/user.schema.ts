@@ -19,7 +19,10 @@ export class User {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: false, unique: false })
+  googleId: string;
+
+  @Prop({ required: false, unique: true })
   username: string;
 
   @Prop({ required: false, unique: false })
@@ -34,10 +37,10 @@ export class User {
   @Prop({ required: false, unique: false })
   bio: string;
 
-  @Prop({ required: true, enum: ['Male', 'Female'] })
+  @Prop({ required: false, enum: ['Male', 'Female'] })
   gender: 'Male' | 'Female';
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   password: string;
 
   @Prop({ required: false })
@@ -46,7 +49,7 @@ export class User {
   @Prop({ type: Address })
   address: Address;
 
-  @Prop({ required: true, default: 'user', enum: ['user', 'admin'] })
+  @Prop({ required: false, default: 'user', enum: ['user', 'admin'] })
   role: 'user' | 'admin';
   isPasswordCorrect: (password: string) => Promise<boolean>;
 }

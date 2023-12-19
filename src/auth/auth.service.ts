@@ -23,8 +23,16 @@ export class AuthService {
   //   }
   //   return null;
   // }
-  async signIn(username: string, pass: string) {
-    const user = await this.usersService.findOne(username);
+  async generateToken(id: string) {
+    const payload = { _id: id };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
+  }
+
+  async signIn(identifier: string, pass: string) {
+    const user = await this.usersService.findByEmailOrUsername(identifier);
+
     if (!(await this.usersService.comparePasswords(pass, user.password))) {
       throw new UnauthorizedException();
     }
@@ -44,6 +52,18 @@ export class AuthService {
       user: newUser,
       access_token: await this.jwtService.signAsync({ _id: newUser._id }),
     };
+  }
+
+  async validateGoogleUser(email: string): Promise<any> {
+    return await this.userModel.findOne({ email });
+  }
+
+  async createGoogleUser(profile: any): Promise<any> {
+    const newUser = new this.userModel({
+      email: profile.emails[0].value,
+      name: profile.displayName,
+    });
+    return await newUser.save();
   }
 
   async isUsernameTaken(username: string): Promise<boolean> {
