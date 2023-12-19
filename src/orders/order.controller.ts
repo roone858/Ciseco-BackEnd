@@ -18,7 +18,10 @@ export class OrderController {
     @User() user: UserDocument,
     @Body() createOrderDto: CreateOrderDto,
   ): Promise<Order> {
-    return this.orderService.createOrder({ ...createOrderDto, user: user._id });
+    return this.orderService.createOrder({
+      ...createOrderDto,
+      userId: user._id,
+    });
   }
   @Get()
   @UseGuards(AdminGuard)

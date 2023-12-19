@@ -46,6 +46,9 @@ export class User {
   @Prop({ required: false })
   image: string;
 
+  @Prop({ required: false, default: false })
+  confirmed: boolean;
+
   @Prop({ type: Address })
   address: Address;
 

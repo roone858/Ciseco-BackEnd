@@ -21,7 +21,7 @@ export class CartController {
 
   @Get()
   getCart(@User() user: UserDocument) {
-    return this.cartService.getUserCart(user);
+    return this.cartService.getUserCart(user._id);
   }
 
   @Post('add')
@@ -31,6 +31,6 @@ export class CartController {
 
   @Delete(':itemId')
   removeFromCart(@User() user: UserDocument, @Param('itemId') itemId: string) {
-    return this.cartService.removeFromCart(user, itemId);
+    return this.cartService.removeFromCart(user._id, itemId);
   }
 }

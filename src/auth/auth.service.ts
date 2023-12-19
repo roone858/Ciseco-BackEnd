@@ -1,10 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/users/schemas/user.schema';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -12,17 +17,9 @@ export class AuthService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
     private usersService: UsersService,
     private jwtService: JwtService,
+    private emailService: MailService,
   ) {}
-  // async validateUser(username: string, password: string): Promise<any> {
-  //   const user = await this.userModel.findOne({ username });
-  //   const isPasswordCorrect = user && (await user.isPasswordCorrect(password));
-  //   if (isPasswordCorrect) {
-  //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //     const { password, ...result } = user;
-  //     return result;
-  //   }
-  //   return null;
-  // }
+
   async generateToken(id: string) {
     const payload = { _id: id };
     return {
@@ -47,13 +44,26 @@ export class AuthService {
       ...createUserDto,
       role: 'user',
     });
-
+    const token = await this.jwtService.signAsync({ _id: newUser._id });
+    this.emailService.sendVerificationEmail(createUserDto.email, token);
     return {
-      user: newUser,
-      access_token: await this.jwtService.signAsync({ _id: newUser._id }),
+      user: {},
+      access_token: token,
     };
   }
 
+  async confirmEmail(token: string): Promise<any> {
+    const decoded = await this.jwtService.decode(token);
+
+    if (!decoded) {
+      throw new NotFoundException('Invalid confirmation token');
+    }
+    const user = await this.usersService.findOneById(decoded._id);
+    if (user) {
+      this.usersService.confirmEmail(decoded._id, true);
+      return 'confirmed';
+    }
+  }
   async validateGoogleUser(email: string): Promise<any> {
     return await this.userModel.findOne({ email });
   }

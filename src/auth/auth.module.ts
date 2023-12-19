@@ -9,10 +9,13 @@ import { UsersService } from 'src/users/users.service';
 import { LocalStrategy } from './local.strategy';
 import { User, UserSchema } from 'src/users/schemas/user.schema';
 import { GoogleStrategy } from './google.strategy';
+import { MailService } from 'src/mail/mail.service';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
     PassportModule,
+    MailModule,
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: process.env.JWT_SECRET,
@@ -22,6 +25,7 @@ import { GoogleStrategy } from './google.strategy';
   ],
   providers: [
     AuthService,
+    MailService,
     JwtStrategy,
     LocalStrategy,
     UsersService,

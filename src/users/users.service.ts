@@ -33,6 +33,13 @@ export class UsersService {
     }
     return user;
   }
+  async findOneById(id: string) {
+    const user = await this.userModel.findOne({ _id: id });
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user;
+  }
 
   async findOneByEmail(email: string) {
     const user = await this.userModel.findOne({ email });
@@ -119,6 +126,15 @@ export class UsersService {
     return this.userModel.findByIdAndUpdate(userId, updateData, {
       new: true,
     });
+  }
+  async confirmEmail(userId: string, isConfirm: boolean): Promise<any> {
+    return this.userModel
+      .findOneAndUpdate(
+        { _id: userId },
+        { $set: { confirmed: isConfirm } },
+        { new: true },
+      )
+      .exec();
   }
   async updateProfileImage(userId: string, filename: string): Promise<any> {
     return this.userModel

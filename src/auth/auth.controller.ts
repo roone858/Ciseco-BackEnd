@@ -9,6 +9,7 @@ import {
   UseGuards,
   UseFilters,
   Res,
+  Query,
   Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -19,7 +20,6 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 import { MongoExceptionFilter } from 'src/exceptions/mongo-exception.filter';
 import { AuthGuard } from '@nestjs/passport';
-
 @Controller('auth')
 @UseFilters(MongoExceptionFilter)
 export class AuthController {
@@ -32,6 +32,10 @@ export class AuthController {
     return req.user;
   }
 
+  @Get('confirm')
+  async emailConfirmation(@Query() query: { token: string }) {
+    return await this.authService.confirmEmail(query.token);
+  }
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
     // Call your AuthService to handle user creation and authentication

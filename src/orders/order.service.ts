@@ -13,7 +13,7 @@ export class OrderService {
   ) {}
 
   async createOrder(createOrderDto: CreateOrderDto): Promise<Order> {
-    const cart = await this.cartService.getUserCart(createOrderDto.user);
+    const cart = await this.cartService.getUserCart(createOrderDto.userId);
     const order = new this.orderModel(createOrderDto);
     order.order_items = cart.items;
     return await order.save();

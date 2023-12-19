@@ -13,6 +13,7 @@ import { CartModule } from './cart/cart.module';
 import { ShippingModule } from './shipping/shipping.module';
 import { WishlistModule } from './wishlist/wishlist.module';
 // import { MulterConfigModule } from './multer/multer.module';
+import { MailModule } from './mail/mail.module';
 @Module({
   imports: [
     UsersModule,
@@ -27,6 +28,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
     ReviewModule,
     ShippingModule,
     WishlistModule,
+    MailModule,
     // MulterConfigModule,
   ],
   controllers: [AppController],

@@ -25,7 +25,7 @@ export class Cart {
     required: true,
     unique: true,
   })
-  user: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
 
   @Prop({
     type: [CartItem],
