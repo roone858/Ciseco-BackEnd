@@ -22,10 +22,10 @@ import { diskStorage } from 'multer';
 import { join } from 'path';
 import { Response } from 'express';
 import * as path from 'path';
+
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
   @Get()
   @UseGuards(JwtAuthGuard)
   @UseGuards(AdminGuard)

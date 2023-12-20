@@ -13,7 +13,9 @@ import { CartModule } from './cart/cart.module';
 import { ShippingModule } from './shipping/shipping.module';
 import { WishlistModule } from './wishlist/wishlist.module';
 // import { MulterConfigModule } from './multer/multer.module';
+import { APP_FILTER } from '@nestjs/core';
 import { MailModule } from './mail/mail.module';
+import { ValidationExceptionFilter } from './exceptions/validation-exception.filter';
 @Module({
   imports: [
     UsersModule,
@@ -32,6 +34,12 @@ import { MailModule } from './mail/mail.module';
     // MulterConfigModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: ValidationExceptionFilter,
+    },
+    AppService,
+  ],
 })
 export class AppModule {}

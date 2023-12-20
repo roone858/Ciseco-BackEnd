@@ -1,12 +1,37 @@
-export class CreateOrderDto {
-  userId: string; // Assuming customer ID for simplicity
-  order_date: Date;
-  total_amount: number;
-  order_items: OrderItem[]; // You need to define OrderItem structure
+// src/orders/dto/create-order.dto.ts
+
+import {
+  IsString,
+  IsDate,
+  IsNumber,
+  ValidateNested,
+  ArrayMinSize,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+
+class OrderItem {
+  @IsString()
+  product: string;
+
+  @IsNumber()
+  quantity: number;
+
+  @IsNumber()
+  subtotal: number;
 }
 
-export class OrderItem {
-  product: string; // Assuming product ID for simplicity
-  quantity: number;
-  subtotal: number;
+export class CreateOrderDto {
+  @IsString()
+  userId: string;
+
+  @IsDate()
+  order_date: Date;
+
+  @IsNumber()
+  total_amount: number;
+
+  @ValidateNested({ each: true })
+  @Type(() => OrderItem)
+  @ArrayMinSize(1, { message: 'At least one order item is required' })
+  order_items: OrderItem[];
 }

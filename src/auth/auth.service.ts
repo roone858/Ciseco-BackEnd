@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto, UserRole } from 'src/users/dto/create-user.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/users/schemas/user.schema';
@@ -40,9 +40,9 @@ export class AuthService {
   }
 
   async signup(createUserDto: CreateUserDto) {
+    createUserDto.role = UserRole.User;
     const newUser = await this.usersService.create({
       ...createUserDto,
-      role: 'user',
     });
     const token = await this.jwtService.signAsync({ _id: newUser._id });
     this.emailService.sendVerificationEmail(createUserDto.email, token);
