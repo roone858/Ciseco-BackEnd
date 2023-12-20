@@ -1,5 +1,3 @@
-// src/orders/dto/create-order.dto.ts
-
 import {
   IsString,
   IsDate,

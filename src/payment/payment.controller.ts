@@ -1,23 +1,18 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { PaymentMethod } from './schemas/payment.schema';
+import { MakePaymentDto } from './dto/make-payment.dto';
 
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post()
-  async makePayment(
-    @Body('user') userId: string,
-    @Body('order') orderId: string,
-    @Body('amount') amount: number,
-    @Body('paymentMethod') paymentMethod: PaymentMethod,
-  ) {
+  async makePayment(@Body() makePaymentDto: MakePaymentDto) {
     return this.paymentService.makePayment(
-      userId,
-      orderId,
-      amount,
-      paymentMethod,
+      makePaymentDto.user,
+      makePaymentDto.order,
+      makePaymentDto.amount,
+      makePaymentDto.paymentMethod,
     );
   }
 }

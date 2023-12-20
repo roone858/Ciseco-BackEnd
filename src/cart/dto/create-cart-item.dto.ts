@@ -1,11 +1,13 @@
-import { IsMongoId, IsInt, Min } from 'class-validator';
-import { Types } from 'mongoose';
+import { IsMongoId, IsInt, Min, IsNumber } from 'class-validator';
 
-export class CreateCartItemDto {
-  @IsMongoId()
-  readonly product: Types.ObjectId;
+export class AddToCartDto {
+  @IsMongoId({ message: 'Invalid product ID' })
+  readonly productId: string;
 
-  @IsInt()
-  @Min(1)
+  @IsInt({ message: 'Quantity must be an integer' })
+  @Min(1, { message: 'Quantity must be at least 1' })
   readonly quantity: number;
+
+  @IsNumber({}, { message: 'Subtotal must be a number' })
+  readonly subtotal: number;
 }

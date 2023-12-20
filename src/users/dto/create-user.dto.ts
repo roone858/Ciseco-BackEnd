@@ -25,14 +25,12 @@ export class AddressDto {
 
   @IsString()
   state: string;
-
-  @IsString()
-  zip: string;
 }
 
 export class CreateUserDto {
   @IsString()
-  readonly googleId: string;
+  @IsOptional()
+  readonly googleId?: string;
 
   @IsString()
   readonly username: string;
@@ -48,7 +46,8 @@ export class CreateUserDto {
   readonly password: string;
 
   @IsEnum(UserRole)
-  role: UserRole; // <-- Use the UserRole enum here
+  @IsOptional()
+  role?: UserRole; // <-- Use the UserRole enum here
 
   @IsObject()
   @IsOptional()

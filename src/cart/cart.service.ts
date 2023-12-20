@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserDocument } from 'src/users/schemas/user.schema';
-import { Cart, CartDocument, CartItem } from './schemas/cart.schema';
+import { Cart, CartDocument } from './schemas/cart.schema';
+import { AddToCartDto } from './dto/create-cart-item.dto';
 
 @Injectable()
 export class CartService {
@@ -21,7 +22,7 @@ export class CartService {
 
   async addToCart(
     user: UserDocument,
-    cartItem: CartItem,
+    cartItem: AddToCartDto,
   ): Promise<CartDocument> {
     const cart = await this.cartModel.findOne({ userId: user._id });
     const item = cart.items.find(
