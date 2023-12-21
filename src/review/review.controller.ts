@@ -7,7 +7,6 @@ import { AdminGuard } from 'src/users/admin.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('reviews')
-@UseGuards(JwtAuthGuard)
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
@@ -22,6 +21,7 @@ export class ReviewController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   async create(@Body() createReviewDto: CreateReviewDto) {
     return this.reviewService.create(createReviewDto);
   }

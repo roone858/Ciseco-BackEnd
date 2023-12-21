@@ -19,7 +19,7 @@ export class UsersService {
   ) {}
 
   async findAll() {
-    const users = await this.userModel.find();
+    const users = await this.userModel.find().select('-password -phone').lean();
     if (!users) {
       throw new NotFoundException();
     }

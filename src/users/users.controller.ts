@@ -28,16 +28,9 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Get()
   @UseGuards(JwtAuthGuard)
-  @UseGuards(AdminGuard)
   findAll() {
     return this.usersService.findAll();
   }
-
-  // @UseGuards(auth)
-  // @Get(':username')
-  // findOne(@Param('username') username: string) {
-  //   return this.usersService.findOne(username);
-  // }
 
   @Post()
   @UseGuards(JwtAuthGuard)

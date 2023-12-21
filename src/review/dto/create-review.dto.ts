@@ -2,10 +2,10 @@ import { IsString, IsNumber, Min, Max } from 'class-validator';
 
 export class CreateReviewDto {
   @IsString()
-  readonly user: string;
+  readonly userId: string;
 
   @IsString()
-  readonly product: string;
+  readonly productId: string;
 
   @IsString()
   readonly text: string;

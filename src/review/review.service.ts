@@ -19,47 +19,47 @@ export class ReviewService {
 
   async findByProduct(productId: string): Promise<Review[]> {
     return this.reviewModel
-      .find({ product: productId })
+      .find({ productId: productId })
       .populate({
-        path: 'user',
+        path: 'userId',
         select: 'name image username', // Exclude phone, email, and password
       })
       .lean()
       .exec();
   }
 
-  async findByProductAndUser(
-    productId: string,
-    userId: string,
-  ): Promise<Review> {
-    // Check if the product exists before querying reviews
-    await this.productService.findById(productId);
-
-    // Find reviews based on both product_id and user_id
-    return this.reviewModel
-      .findOne({ product: productId, user: userId })
-      .exec();
-  }
-
   async create(createReviewDto: CreateReviewDto): Promise<Review> {
-    const reviewExists = await this.findByProductAndUser(
-      createReviewDto.product,
-      createReviewDto.user,
+    const existingReview = await this.findByProductAndUser(
+      createReviewDto.productId,
+      createReviewDto.userId,
     );
-    if (reviewExists)
-      throw new ConflictException(
-        `Review for product ${createReviewDto.product} by user ${createReviewDto.user} already exists`,
+    if (existingReview) {
+      // Update the existing review if it exists
+      return this.reviewModel.findByIdAndUpdate(
+        existingReview._id,
+        createReviewDto,
+        { new: true },
       );
+    }
 
     const productExists = await this.productService.exists(
-      createReviewDto.product,
+      createReviewDto.productId,
     );
-    if (!productExists)
+
+    if (!productExists) {
       throw new ConflictException(
-        ` product ${createReviewDto.product}  not found`,
+        `Product ${createReviewDto.productId} not found`,
       );
+    }
 
     const createdReview = new this.reviewModel(createReviewDto);
     return createdReview.save();
+  }
+
+  async findByProductAndUser(
+    productId: string,
+    userId: string,
+  ): Promise<ReviewDocument | null> {
+    return this.reviewModel.findOne({ productId, userId }).exec();
   }
 }
