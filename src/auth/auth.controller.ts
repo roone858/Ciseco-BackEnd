@@ -61,8 +61,6 @@ export class AuthController {
   @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleAuth(@Req() req, @Res() res) {
-    console.log(req);
-    console.log(res);
     res.redirect(
       'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fgoogle%2Fcallback&scope=profile%20email&client_id=267959229684-cb60rimtu2gkm8p0g472pnnbdgqmjsbg.apps.googleusercontent.com',
     );
@@ -74,7 +72,6 @@ export class AuthController {
     // Handles the Google authentication callback
     try {
       const user = (req as any).user;
-      console.log(user);
       const token = await this.authService.generateToken(user._id);
       return res.json(token);
     } catch (error) {

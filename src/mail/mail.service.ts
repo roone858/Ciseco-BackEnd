@@ -6,7 +6,7 @@ export class MailService {
 
   async sendVerificationEmail(to: string, token: string): Promise<void> {
     const mailOptions = {
-      from: 'roone858@gmail.com',
+      from: process.env.EMAIL,
       to,
       subject: 'Email Verification',
       template: './confirmation',

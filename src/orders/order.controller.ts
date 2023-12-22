@@ -31,7 +31,6 @@ export class OrderController {
 
   @Get('/main')
   async getOrderById(@User() user: UserDocument): Promise<Order> {
-    console.log(user);
     return this.orderService.getOrderByUserId(user._id);
   }
 }

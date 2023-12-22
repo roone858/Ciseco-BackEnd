@@ -14,8 +14,8 @@ import { join } from 'path';
         service: 'gmail',
         secure: false,
         auth: {
-          user: 'roone858@gmail.com',
-          pass: 'siwo qspt evji fndv',
+          user: process.env.EMAIL,
+          pass: process.env.EMAIL_SECRET,
         },
       },
       defaults: {

@@ -35,11 +35,12 @@ export class ReviewService {
     );
     if (existingReview) {
       // Update the existing review if it exists
-      return this.reviewModel.findByIdAndUpdate(
-        existingReview._id,
-        createReviewDto,
-        { new: true },
-      );
+      return this.reviewModel
+        .findByIdAndUpdate(existingReview._id, createReviewDto, { new: true })
+        .populate({
+          path: 'userId',
+          select: 'name image username', // Exclude phone, email, and password
+        });
     }
 
     const productExists = await this.productService.exists(
@@ -53,7 +54,12 @@ export class ReviewService {
     }
 
     const createdReview = new this.reviewModel(createReviewDto);
-    return createdReview.save();
+    return createdReview.save().then((savedReview) => {
+      return this.reviewModel.populate(savedReview, {
+        path: 'userId',
+        select: 'name image username',
+      });
+    });
   }
 
   async findByProductAndUser(

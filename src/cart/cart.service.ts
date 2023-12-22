@@ -30,7 +30,6 @@ export class CartService {
     );
     if (item) item.quantity = item.quantity + cartItem.quantity;
     else cart.items.push({ ...cartItem });
-    console.log(user);
     return await cart.save();
   }
 

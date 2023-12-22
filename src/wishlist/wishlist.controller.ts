@@ -17,14 +17,13 @@ import { UserDocument } from 'src/users/schemas/user.schema';
 export class WishlistController {
   constructor(private readonly wishlistService: WishlistService) {}
 
-  @Post('add/:product')
+  @Post('add/:productId')
   async addToWishlist(
     @User() user: UserDocument,
-    @Param('product') product: string,
+    @Param('productId') productId: string,
   ): Promise<Wishlist> {
     const userId = user._id;
-    console.log(userId);
-    return this.wishlistService.createWishlistItem(userId, product);
+    return this.wishlistService.createWishlistItem(userId, productId);
   }
 
   @Get()
