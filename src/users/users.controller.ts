@@ -74,9 +74,10 @@ export class UsersController {
       storage: diskStorage({
         destination: './uploads', // Specify the directory where files will be stored
         filename: (req, file, cb) => {
+          console.log(file);
           const userId = (req as any).user._id; // Assuming you have a user object in the request
           const fileExtension = path.extname(file.originalname);
-          const fileName = userId + fileExtension;
+          const fileName = userId + Date.now() + fileExtension;
           cb(null, fileName);
         },
       }),

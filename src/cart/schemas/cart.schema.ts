@@ -14,6 +14,8 @@ export class CartItem {
 
   @Prop({ required: true })
   quantity: number;
+
+  @Prop({ required: true, default: 0 })
   subtotal: number;
 }
 export const CartItemSchema = SchemaFactory.createForClass(CartItem);
@@ -32,5 +34,8 @@ export class Cart {
     default: [],
   })
   items: CartItem[];
+
+  @Prop({ required: true, default: 0 })
+  total: number;
 }
 export const CartSchema = SchemaFactory.createForClass(Cart);

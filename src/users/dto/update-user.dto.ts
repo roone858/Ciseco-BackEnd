@@ -19,9 +19,6 @@ export class AddressDto {
 
   @IsString()
   state: string;
-
-  @IsString()
-  zip: string;
 }
 
 export class UpdateUserDto {
