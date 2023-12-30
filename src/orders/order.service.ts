@@ -15,7 +15,7 @@ export class OrderService {
   async createOrder(createOrderDto: CreateOrderDto): Promise<Order> {
     const cart = await this.cartService.getUserCart(createOrderDto.userId);
     const order = new this.orderModel(createOrderDto);
-    order.order_items = cart.items;
+    order.cartId = cart._id;
     return await order.save();
   }
 
@@ -27,6 +27,6 @@ export class OrderService {
     return this.orderModel.findById(orderId).exec();
   }
   async getOrderByUserId(userId: string) {
-    return this.orderModel.findOne({ user: userId }).exec();
+    return this.orderModel.findOne({ userId: userId }).exec();
   }
 }

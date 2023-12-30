@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
-import { CartItem, CartItemSchema } from 'src/cart/schemas/cart.schema';
+import { Types } from 'mongoose';
 
 export type OrderDocument = Order & Document;
 
@@ -13,18 +12,24 @@ enum OrderStatus {
 @Schema()
 export class Order {
   @Prop({ required: true, type: Types.ObjectId, ref: 'User', unique: true }) // Reference to the Customer schema
-  user: string;
+  userId: string;
 
   @Prop({ required: true })
-  order_date: Date;
+  createdAt: Date;
 
   @Prop({ required: true })
-  total_amount: number;
+  cost: number;
+
+  @Prop({ required: true })
+  tax: number;
+
+  @Prop({ required: true })
+  total: number;
 
   @Prop({ required: true, default: OrderStatus.Pending, enum: OrderStatus })
-  status: OrderStatus;
+  paid: OrderStatus;
 
-  @Prop({ required: true, type: [CartItemSchema] })
-  order_items: CartItem[];
+  @Prop({ required: true, type: Types.ObjectId, ref: 'Cart', unique: true }) // Reference to the Customer schema
+  cartId: string;
 }
 export const OrderSchema = SchemaFactory.createForClass(Order);

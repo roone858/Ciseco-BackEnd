@@ -19,8 +19,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const user = await this.userModel
       .findById(payload._id)
-      .select('-password ')
-      .lean();
+      .select('-password')
+      .populate('address') // Populate the addressId field with the corresponding address
+      .lean()
+      .exec();
     return user;
   }
 }

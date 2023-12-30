@@ -11,11 +11,11 @@ export enum PaymentMethod {
 export class Payment extends Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   @IsMongoId()
-  user: string;
+  userId: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: true })
   @IsMongoId()
-  order: string;
+  orderId: string;
 
   @Prop({ required: true })
   @IsNumber()
@@ -25,16 +25,8 @@ export class Payment extends Document {
   @IsEnum(PaymentMethod)
   paymentMethod: PaymentMethod;
 
-  @Prop({
-    type: String,
-    enum: ['pending', 'success', 'failed'],
-    default: 'pending',
-  })
-  @IsEnum(['pending', 'success', 'failed'])
-  status: 'pending' | 'success' | 'failed';
-
   @Prop({ default: Date.now })
-  timestamp: Date;
+  createdAt: Date;
 }
 
 export const PaymentSchema = SchemaFactory.createForClass(Payment);

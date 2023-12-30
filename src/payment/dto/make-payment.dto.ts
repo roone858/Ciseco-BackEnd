@@ -3,10 +3,10 @@ import { PaymentMethod } from '../schemas/payment.schema';
 
 export class MakePaymentDto {
   @IsString()
-  readonly user: string;
+  readonly userId: string;
 
   @IsString()
-  readonly order: string;
+  readonly orderId: string;
 
   @IsNumber()
   readonly amount: number;

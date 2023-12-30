@@ -6,13 +6,16 @@ import { MakePaymentDto } from './dto/make-payment.dto';
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
+  @Post('/checkout')
+  checkout(@Body() body: { cart: any }) {
+    try {
+      return this.paymentService.checkout(body.cart);
+    } catch (error) {
+      return error;
+    }
+  }
   @Post()
   async makePayment(@Body() makePaymentDto: MakePaymentDto) {
-    return this.paymentService.makePayment(
-      makePaymentDto.user,
-      makePaymentDto.order,
-      makePaymentDto.amount,
-      makePaymentDto.paymentMethod,
-    );
+    return this.paymentService.makePayment(makePaymentDto);
   }
 }

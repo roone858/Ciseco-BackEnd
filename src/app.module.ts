@@ -16,6 +16,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
 import { APP_FILTER } from '@nestjs/core';
 import { MailModule } from './mail/mail.module';
 import { ValidationExceptionFilter } from './exceptions/validation-exception.filter';
+import { PaymentModule } from './payment/payment.module';
 @Module({
   imports: [
     UsersModule,
@@ -25,6 +26,7 @@ import { ValidationExceptionFilter } from './exceptions/validation-exception.fil
     MongooseModule.forRoot(process.env.DATABASE_URL),
     AuthModule,
     CartModule,
+    PaymentModule,
     ProductsModule,
     OrderModule,
     ReviewModule,

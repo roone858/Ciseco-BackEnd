@@ -54,4 +54,7 @@ export class CreateUserDto {
   @ValidateNested({ each: true })
   @Type(() => AddressDto)
   readonly address?: AddressDto;
+
+  @IsOptional()
+  addressId: string;
 }

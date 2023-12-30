@@ -12,10 +12,12 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AddressService } from 'src/address/address.service';
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    private addressService: AddressService,
   ) {}
 
   async findAll() {
@@ -108,6 +110,12 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto) {
+    if (createUserDto.address) {
+      const address = await this.addressService.createAddress(
+        createUserDto.address,
+      );
+      createUserDto.addressId = (address as any)._id;
+    }
     const user = new this.userModel({
       ...createUserDto,
       password: await this.hashPassword(createUserDto.password),
@@ -123,6 +131,12 @@ export class UsersService {
     updateUserDto: UpdateUserDto,
   ): Promise<User> {
     const { password, ...updateData } = updateUserDto;
+    if (updateData.address) {
+      const address = await this.addressService.createAddress(
+        updateData.address,
+      );
+      updateData.address = (address as any)._id;
+    }
     return this.userModel.findByIdAndUpdate(userId, updateData, {
       new: true,
     });

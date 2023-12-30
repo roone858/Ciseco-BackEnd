@@ -12,7 +12,12 @@ enum ShippingStatus {
 @Schema()
 export class Shipping {
   @Prop({ required: true, type: Types.ObjectId, ref: 'Order', unique: true }) // Reference to the Customer schema
-  order: string;
+  orderId: string;
+  @Prop()
+  shipping_target_address_id: string;
+
+  @Prop()
+  shippingMethod: string;
 
   @Prop({
     required: true,

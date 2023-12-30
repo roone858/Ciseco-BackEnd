@@ -11,10 +11,12 @@ import { User, UserSchema } from 'src/users/schemas/user.schema';
 import { GoogleStrategy } from './google.strategy';
 import { MailService } from 'src/mail/mail.service';
 import { MailModule } from 'src/mail/mail.module';
+import { AddressModule } from 'src/address/address.module';
 
 @Module({
   imports: [
     PassportModule,
+    AddressModule,
     MailModule,
     JwtModule.registerAsync({
       useFactory: () => ({
